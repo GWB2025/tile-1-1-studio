@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore seeded periodic and aperiodic Tile(1,1) tilings. Export layered SVGs for pen plotting.">
+  <title>Tile(1,1) Studio</title>
+  <style>:root{--ink:#273930;--green:#344f3f;--cream:#f5f3eb;--line:#d9ddcf;--muted:#69756b;--accent:#b3653e;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--cream);font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ba724b;outline-offset:3px}header{height:78px;padding:0 38px;display:flex;align-items:center;gap:30px;border-bottom:1px solid var(--line);background:#faf9f4}.brand{font-size:15px;letter-spacing:2px;text-decoration:none;color:var(--ink);white-space:nowrap}.brand strong{font-weight:500;color:var(--muted)}.brand-icon{display:inline-block;font-size:30px;margin-right:14px;vertical-align:middle}.edition{font-size:10px;letter-spacing:2px;color:var(--muted);flex:1;text-align:center}.quiet{border:0;background:none;color:var(--muted);font-size:12px;padding:8px}.quiet:hover{color:var(--ink);text-decoration:underline}main{display:grid;grid-template-columns:330px minmax(0,1fr);min-height:calc(100vh - 78px)}aside{padding:30px 28px 20px;border-right:1px solid var(--line);background:#faf9f4}.eyebrow{font-size:9px;letter-spacing:1.7px;font-weight:600;margin:0 0 13px;color:var(--muted)}h1{font:normal 43px/1.02 Georgia,serif;letter-spacing:-1.6px;margin:0 0 17px}p{line-height:1.6}.intro{font-size:13px;color:var(--muted);margin-bottom:25px}fieldset{border:0;margin:0 0 23px;padding:0}legend{font-size:9px;letter-spacing:2px;font-weight:650;padding:0;margin-bottom:13px;color:#7c8174}label{display:block;font-size:12px;font-weight:500;margin:11px 0 8px}.hint{float:right;font-size:10px;color:var(--muted);font-weight:400}.mode-switch{display:flex;gap:4px;background:#edf0e6;border:1px solid #dce1d2;padding:4px;border-radius:7px}.mode-switch label{width:50%;margin:0;position:relative}.mode-switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}.mode-switch span{display:block;text-align:center;padding:10px 5px;border-radius:4px;color:var(--muted)}.mode-switch input:checked+span{background:var(--green);color:white;box-shadow:0 2px 4px #22342a14}.mode-switch input:focus-visible+span{outline:3px solid var(--accent)}.note{font-size:11px;line-height:1.5;color:var(--muted);margin:9px 0 0;min-height:33px}input:not([type=range]):not([type=radio]),select{width:100%;min-height:37px;border:1px solid #d4d8cb;border-radius:5px;background:#fffefa;color:var(--ink);padding:8px 10px;font-size:12px}input[type=range]{width:100%;accent-color:var(--green);margin:1px 0 9px}.seed-row{display:flex;gap:7px}.seed-row input{min-width:0;font-family:ui-monospace,monospace}.seed-row button{border:1px solid #cdd4c5;background:#edf0e6;border-radius:5px;font-size:11px;padding:0 10px;white-space:nowrap}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}output{float:right;font-weight:500;font-size:11px}.swatches{display:flex;gap:6px;margin:12px 0 14px}.swatch{height:7px;flex:1;border-radius:3px}.primary{background:var(--green);color:#fff;border:1px solid var(--green);padding:12px 19px;border-radius:5px;font-size:12px;font-weight:550}.primary:hover{background:#233d2e}.secondary{border:1px solid #b9c4b1;background:transparent;color:var(--green);padding:12px 15px;border-radius:5px;font-size:12px}.secondary:hover{background:#edf0e6}.generate{width:100%;display:flex;justify-content:space-between;align-items:center}.generate span{font-size:18px}.recipe-actions{display:flex;justify-content:space-between;margin:7px 0}.footnote{font-size:10px;color:#7a8276;line-height:1.7;margin:12px 0 0}.workspace{padding:29px 38px 24px;min-width:0;background:#e8ece2;display:flex;flex-direction:column}.workspace-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;min-height:32px}.status-dot{display:inline-block;width:6px;height:6px;background:#758d64;border-radius:50%;margin-right:9px}.view-switch{display:flex;padding:3px;border:1px solid #cbd4c3;border-radius:5px;gap:2px}.view-switch button{font-size:10px;padding:6px 9px;border:none;color:#70806d;background:none;border-radius:3px}.view-switch button[aria-pressed=true]{background:#fbfbf5;color:var(--green);box-shadow:0 1px 3px #0001}.art-stage{min-height:380px;flex:1;display:flex;align-items:center;justify-content:center;padding:40px 15px 22px}.paper{background:#fffdf7;width:100%;max-width:850px;box-shadow:0 12px 30px #3b4d3220,0 1px 3px #3b4d3215;line-height:0}.paper svg{display:block;width:100%;height:auto;max-height:70vh}.caption{display:flex;justify-content:space-between;gap:18px;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin:0 15px;color:#6d7867}.preview-note{text-align:center;font-size:10px;color:#7b8575;margin:17px 0 24px}.export-bar{padding:21px 0 0;border-top:1px solid #cbd4c3;display:flex;align-items:center;justify-content:space-between;gap:20px}.export-bar strong{font-size:11px;font-weight:550}.export-bar p{font-size:10px;margin:5px 0;color:#75816e}.export-actions{display:flex;gap:9px}.message{font-size:11px;margin:12px 0 0;color:var(--green);min-height:18px}.message.error{color:#a44031}button:disabled{opacity:.4;cursor:default}dialog{border:1px solid #d9ddcf;border-radius:10px;background:#fffef8;color:var(--ink);max-width:620px;width:calc(100% - 30px);padding:35px;box-shadow:0 25px 80px #0003}dialog::backdrop{background:#21322877;backdrop-filter:blur(3px)}dialog h2{font:normal 32px Georgia,serif;margin:8px 0 20px}dialog p{font-size:13px}dialog .close{position:absolute;right:14px;top:8px;font-size:26px}.links a{color:var(--green);line-height:2}.paper.portrait{max-width:550px}@media(min-width:1450px){main{grid-template-columns:360px 1fr}aside{padding:35px 38px}.workspace{padding:34px 60px}}@media(max-width:1050px){header{padding:0 22px}.edition{display:none}header .quiet{margin-left:auto}main{grid-template-columns:300px minmax(0,1fr)}aside{padding:25px 22px}.workspace{padding:24px 20px}.export-bar{align-items:flex-start;flex-direction:column}.art-stage{padding:30px 0 20px}.caption{margin:0}.workspace-bar{align-items:flex-start;flex-direction:column}}@media(max-width:690px){header{height:65px;padding:0 18px}.brand{font-size:12px}.brand-icon{font-size:24px;margin-right:8px}main{display:flex;flex-direction:column}aside{border-right:0;padding:24px}h1{font-size:37px}h1 br{display:none}h1 br:after{content:' '}.intro{margin-bottom:20px}form{display:grid;grid-template-columns:1fr 1fr;gap:15px}fieldset{margin:0}fieldset:nth-child(2){grid-row:span 2}.generate,.recipe-actions{grid-column:1/-1}.generate{margin-top:5px}.workspace{padding:24px 20px}.workspace-bar{flex-direction:row;align-items:center}.art-stage{min-height:260px}.export-bar{gap:15px}.export-actions{width:100%;flex-wrap:wrap}.export-actions button{flex:1}.caption{font-size:8px}.paper svg{max-height:none}.note{font-size:10px}label{font-size:11px}.two-col{gap:7px}dialog{padding:26px}}
+</style>
+</head>
+<body>
+  <header><a class="brand" href="#"><span class="brand-icon">✧</span> TILE(1,1) <strong>STUDIO</strong></a><span class="edition">MATHEMATICAL PATTERNS / 01</span><button id="about" class="quiet">About the tile</button></header>
+  <main>
+    <aside>
+      <p class="eyebrow">A LITTLE ORDER. A LITTLE SURPRISE.</p>
+      <h1>One tile.<br>Two worlds.</h1>
+      <p class="intro">Explore the boundary between repetition and aperiodic order.</p>
+      <form id="controls">
+        <fieldset><legend>01 / TILING SYSTEM</legend><div class="mode-switch">
+          <label><input type="radio" name="mode" value="aperiodic" checked><span>Aperiodic</span></label>
+          <label><input type="radio" name="mode" value="periodic"><span>Periodic</span></label>
+        </div><p id="modeNote" class="note"></p></fieldset>
+        <fieldset><legend>02 / COMPOSITION</legend>
+          <label for="seed">Seed <span class="hint">numbers or words</span></label>
+          <div class="seed-row"><input id="seed" value="20261104" maxlength="120" required autocomplete="off"><button type="button" id="next" title="Next seed">Next ↗</button></div>
+          <div class="row"><label for="paper">Paper</label><select id="paper"><option value="postcard">Postcard · 148 × 105 mm</option><option value="a5">A5 · 210 × 148 mm</option><option value="a4">A4 · 210 × 297 mm</option></select></div>
+          <label for="edge">Tile edge <output id="edgeValue">6 mm</output></label><input type="range" id="edge" min="3" max="18" step="0.5" value="6">
+          <div class="two-col"><div><label for="margin">Margin · mm</label><input id="margin" type="number" min="3" max="30" step="1" value="8" required></div><div><label for="rotation">Extra rotation</label><select id="rotation"><option value="0">0°</option><option value="15">15°</option><option value="30">30°</option><option value="45">45°</option><option value="60">60°</option><option value="90">90°</option></select></div></div>
+        </fieldset>
+        <fieldset><legend>03 / INK & PAPER</legend>
+          <label for="palette">Pen palette</label><select id="palette"><option value="kyoto">Kyoto · Orange & browns</option><option value="garden">Garden · Green, blue & purple</option><option value="black">Monochrome · Black</option></select>
+          <div id="swatches" class="swatches"></div>
+          <label for="penWidth">Preview stroke · mm</label><select id="penWidth"><option value="0.25">0.25 · fine</option><option value="0.35">0.35 · medium</option><option value="0.45">0.45 · Micron 05 nominal</option></select>
+        </fieldset>
+        <button class="primary generate" type="submit">Generate tiling <span>↗</span></button>
+        <div class="recipe-actions"><button type="button" id="saveRecipe" class="quiet">Save settings</button><button type="button" id="loadRecipe" class="quiet">Load settings</button></div>
+        <input type="file" id="recipeFile" accept=".json,application/json" hidden>
+      </form>
+      <p class="footnote">Same seed + settings = same drawing.<br>Works offline. No account needed.</p>
+    </aside>
+    <section class="workspace" aria-label="Artwork preview">
+      <div class="workspace-bar"><div><span class="status-dot"></span><span id="artTitle">Aperiodic study</span></div><div class="view-switch"><button id="viewLines" aria-pressed="true">Pen lines</button><button id="viewFills" aria-pressed="false">Tile colours</button></div></div>
+      <div class="art-stage"><div id="paperView" class="paper"></div></div>
+      <div class="caption"><span id="caption">Preparing your tiling…</span><span id="pageLabel">148 × 105 mm</span></div>
+      <p id="previewNote" class="preview-note">The preview shows the pen paths. Paper and captions are not exported.</p>
+      <div class="export-bar"><div><strong id="stats">—</strong><p id="exportNote">Shared edges drawn once · separate pen layers</p></div><div class="export-actions"><button id="carrier" class="secondary">Postcard on A4</button><button id="export" class="primary">Export SVG ↓</button></div></div>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <dialog id="aboutDialog"><button class="close quiet" id="closeAbout" aria-label="Close about dialog">×</button><p class="eyebrow">THE MATHEMATICS</p><h2>A shape with two possibilities.</h2>
+    <p>Tile(1,1) has fourteen equal straight edges, including two collinear edges. Its shape was studied by David Smith, Joseph Samuel Myers, Craig S. Kaplan and Chaim Goodman-Strauss.</p>
+    <p><strong>Aperiodic mode</strong> selects a finite patch from their substitution construction. Every tile has the same handedness. Such infinite tilings cannot have a translational period.</p>
+    <p><strong>Periodic mode</strong> repeats a two-tile cell containing an original and a reflected tile. Its colour pattern repeats over a 3 × 3 array of cells.</p>
+    <p>The seed selects a crop, orientation and colours. Aperiodic seeds sample different parts of valid substitution patches. Periodic seeds vary a common repeating lattice; they do not each invent a new mathematical tiling family. The finite paper crop itself is not an infinite tiling.</p>
+    <p><strong>For SVG Plotter:</strong> choose the matching page, keep original size and position, set rotation to 0° and plot outline paths. Filled preview colours are for inspection only; exported SVGs contain pen lines. No physical plot has been verified.</p>
+    <p class="links"><a href="https://cs.uwaterloo.ca/~csk/spectre/" target="_blank" rel="noreferrer">Read the original research ↗</a><br><a href="https://youtu.be/ko6YCbfKtQg?t=699" target="_blank" rel="noreferrer">Dan Catt on repeatable randomness ↗</a><br><a href="https://youtu.be/1RD83NjwNIk?t=98" target="_blank" rel="noreferrer">Okamirufu on rules and parameters ↗</a></p>
+    <p class="footnote">Version 1.0.0 · Gordon Brindle, with OpenAI ChatGPT/Codex assistance. This project is not endorsed by the referenced researchers or artists.</p>
+  </dialog>
+  <script>/* Tile(1,1) mathematical geometry: Smith, Myers, Kaplan & Goodman-Strauss.
+ * New implementation for Tile(1,1) Studio. Coordinates use unit edge length.
+ */
+(function(root,factory){
+  if(typeof module==='object' && module.exports) module.exports=factory();
+  else root.TileGeometry=factory();
+})(typeof globalThis!=='undefined'?globalThis:this,function(){
+  'use strict';
+  const h=Math.sqrt(3)/2;
+  const TILE=Object.freeze([[0,0],[1,0],[1.5,-h],[1.5+h,.5-h],
+    [1.5+h,1.5-h],[2.5+h,1.5-h],[3+h,1.5],[3,2],
+    [3-h,1.5],[2.5-h,1.5+h],[1.5-h,1.5+h],
+    [.5-h,1.5+h],[-h,1.5],[0,1]].map(Object.freeze));
+  const ID=[1,0,0,0,1,0];
+  const add=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+  const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]];
+  const cross=(a,b)=>a[0]*b[1]-a[1]*b[0];
+  const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+  const transform=(m,p)=>[m[0]*p[0]+m[1]*p[1]+m[2],m[3]*p[0]+m[4]*p[1]+m[5]];
+  const translation=(x,y)=>[1,0,x,0,1,y];
+  const rotation=deg=>{const a=deg*Math.PI/180,c=Math.cos(a),s=Math.sin(a);return [c,-s,0,s,c,0];};
+  const multiply=(a,b)=>[
+    a[0]*b[0]+a[1]*b[3],a[0]*b[1]+a[1]*b[4],a[0]*b[2]+a[1]*b[5]+a[2],
+    a[3]*b[0]+a[4]*b[3],a[3]*b[1]+a[4]*b[4],a[3]*b[2]+a[4]*b[5]+a[5]];
+  const signedArea=p=>p.reduce((s,a,i)=>s+cross(a,p[(i+1)%p.length]),0)/2;
+  const area=p=>Math.abs(signedArea(p));
+  const bounds=p=>({minX:Math.min(...p.map(q=>q[0])),maxX:Math.max(...p.map(q=>q[0])),minY:Math.min(...p.map(q=>q[1])),maxY:Math.max(...p.map(q=>q[1]))});
+  const overlaps=(a,b)=>a.minX<b.maxX-1e-8 && b.minX<a.maxX-1e-8 && a.minY<b.maxY-1e-8 && b.minY<a.maxY-1e-8;
+  function triangulate(poly){
+    const p=poly.map(a=>[...a]);
+    if(signedArea(p)<0)p.reverse();
+    // Remove collinear vertices, including the intentional two-edge straight side.
+    for(let i=p.length-1;i>=0;i--){
+      if(Math.abs(cross(sub(p[i],p[(i+p.length-1)%p.length]),sub(p[(i+1)%p.length],p[i])))<1e-9)p.splice(i,1);
+    }
+    const out=[];
+    while(p.length>3){
+      let found=false;
+      for(let i=0;i<p.length;i++){
+        const j=(i+p.length-1)%p.length,k=(i+1)%p.length,a=p[j],b=p[i],c=p[k];
+        if(cross(sub(b,a),sub(c,b))<=1e-9)continue;
+        if(p.some((v,n)=>n!==i&&n!==j&&n!==k&&cross(sub(b,a),sub(v,a))>=-1e-9&&cross(sub(c,b),sub(v,b))>=-1e-9&&cross(sub(a,c),sub(v,c))>=-1e-9))continue;
+        out.push([a,b,c]);p.splice(i,1);found=true;break;
+      }
+      if(!found)throw new Error('Cannot triangulate polygon');
+    }
+    if(p.length===3)out.push(p);
+    return out;
+  }
+  function clipConvex(poly,clip){
+    let p=poly;
+    if(signedArea(clip)<0)clip=[...clip].reverse();
+    for(let i=0;i<clip.length && p.length;i++){
+      const a=clip[i],b=clip[(i+1)%clip.length],v=sub(b,a),out=[];
+      let prev=p[p.length-1],dp=cross(v,sub(prev,a));
+      for(const curr of p){
+        const dc=cross(v,sub(curr,a));
+        if((dc>=-1e-10)!==(dp>=-1e-10)){
+          const t=dp/(dp-dc);out.push([prev[0]+t*(curr[0]-prev[0]),prev[1]+t*(curr[1]-prev[1])]);
+        }
+        if(dc>=-1e-10)out.push(curr);
+        prev=curr;dp=dc;
+      }
+      p=out;
+    }
+    return p;
+  }
+  function intersectionArea(a,b){
+    if(!overlaps(bounds(a),bounds(b)))return 0;
+    let total=0;
+    for(const t of triangulate(a))for(const u of triangulate(b)){
+      if(overlaps(bounds(t),bounds(u)))total+=area(clipConvex(t,u));
+    }
+    return total;
+  }
+  function clipLine(a,b,r){
+    const dx=b[0]-a[0],dy=b[1]-a[1]; let lo=0,hi=1;
+    const p=[-dx,dx,-dy,dy],q=[a[0]-r.x,r.x+r.width-a[0],a[1]-r.y,r.y+r.height-a[1]];
+    for(let i=0;i<4;i++){
+      if(Math.abs(p[i])<1e-12){if(q[i]<-1e-9)return null;continue;}
+      const t=q[i]/p[i];if(p[i]<0)lo=Math.max(lo,t);else hi=Math.min(hi,t);
+      if(lo>hi+1e-10)return null;
+    }
+    if(hi-lo<1e-10)return null;
+    return [[a[0]+lo*dx,a[1]+lo*dy],[a[0]+hi*dx,a[1]+hi*dy]];
+  }
+  return {TILE,ID,add,sub,cross,distance,transform,translation,rotation,multiply,signedArea,area,bounds,overlaps,triangulate,clipConvex,intersectionArea,clipLine};
+});
+</script><script>/* Tile(1,1) Studio. Mathematical construction: Smith, Myers, Kaplan and
+ * Goodman-Strauss, A chiral aperiodic monotile (2024), Appendix A / Figure 5.3.
+ * The coordinate and substitution tables are mathematical data; see REFERENCES.md.
+ */
+(function(root,factory){
+  if(typeof module==='object' && module.exports) module.exports=factory(require('./geometry.js'));
+  else root.TileStudio=factory(root.TileGeometry);
+})(typeof globalThis!=='undefined'?globalThis:this,function(G){
+  'use strict';
+  const VERSION='1.0.0';
+  const PALETTES={
+    kyoto:[{name:'Pigma Micron Orange 05 · 35781',hex:'#df7b28'},{name:'Pigma Micron Light Brown 05 · 35783',hex:'#a97850'},{name:'Pigma Micron Dark Brown 05 · 37741',hex:'#493126'}],
+    garden:[{name:'Pigma Micron Green 05',hex:'#48725a'},{name:'Pigma Micron Blue 05',hex:'#406993'},{name:'Pigma Micron Purple 05',hex:'#805875'}],
+    black:[{name:'Pigma Micron Black 05',hex:'#252a29'}]
+  };
+  const RULES={
+    Gamma:['Pi','Delta',null,'Theta','Sigma','Xi','Phi','Gamma'],
+    Delta:['Xi','Delta','Xi','Phi','Sigma','Pi','Phi','Gamma'],
+    Theta:['Psi','Delta','Pi','Phi','Sigma','Pi','Phi','Gamma'],
+    Lambda:['Psi','Delta','Xi','Phi','Sigma','Pi','Phi','Gamma'],
+    Xi:['Psi','Delta','Pi','Phi','Sigma','Psi','Phi','Gamma'],
+    Pi:['Psi','Delta','Xi','Phi','Sigma','Psi','Phi','Gamma'],
+    Sigma:['Xi','Delta','Xi','Phi','Sigma','Pi','Lambda','Gamma'],
+    Phi:['Psi','Delta','Psi','Phi','Sigma','Pi','Phi','Gamma'],
+    Psi:['Psi','Delta','Psi','Phi','Sigma','Psi','Phi','Gamma']
+  };
+  function hash(text){
+    let h=2166136261;
+    for(const c of String(text)){h^=c.codePointAt(0);h=Math.imul(h,16777619);}
+    h^=h>>>16;h=Math.imul(h,0x7feb352d);h^=h>>>15;h=Math.imul(h,0x846ca68b);return (h^(h>>>16))>>>0;
+  }
+  function random(seed){
+    let state=hash(seed);
+    return ()=>{state=(state+0x6d2b79f5)|0;let t=Math.imul(state^(state>>>15),1|state);t^=t+Math.imul(t^(t>>>7),61|t);return ((t^(t>>>14))>>>0)/4294967296;};
+  }
+  const CACHE=new Map();
+  function aperiodicPatch(depth=4,label='Delta'){
+    if(!Number.isInteger(depth)||depth<0||depth>5||!RULES[label])throw new Error('Invalid substitution settings');
+    const cacheKey=`${depth}/${label}`;
+    if(CACHE.has(cacheKey))return CACHE.get(cacheKey);
+    const q=[3,5,7,11].map(i=>G.TILE[i]);
+    let nodes={};
+    for(const name of Object.keys(RULES))nodes[name]={quad:q,label:name};
+    nodes.Gamma={quad:q,children:[
+      [{label:'Gamma1'},G.ID],
+      [{label:'Gamma2'},G.multiply(G.translation(...G.TILE[8]),G.rotation(30))]
+    ]};
+    for(let generation=0;generation<depth;generation++){
+      const quad=nodes.Delta.quad,transforms=[G.ID]; let angle=0;
+      for(const [turn,from,to] of [[60,3,1],[0,2,0],[60,3,1],[60,3,1],[0,2,0],[60,3,1],[-120,3,3]]){
+        angle+=turn;
+        const r=G.rotation(angle),target=G.transform(transforms.at(-1),quad[from]);
+        const move=G.sub(target,G.transform(r,quad[to]));
+        transforms.push(G.multiply(G.translation(...move),r));
+      }
+      const ts=transforms.map(t=>G.multiply([-1,0,0,0,1,0],t));
+      const newQuad=[[6,2],[5,1],[3,2],[0,1]].map(([t,p])=>G.transform(ts[t],quad[p]));
+      const next={};
+      for(const [name,rule] of Object.entries(RULES))next[name]={quad:newQuad,children:rule.flatMap((child,i)=>child?[[nodes[child],ts[i]]]:[])};
+      nodes=next;
+    }
+    const out=[];
+    function visit(node,m,path){
+      if(node.children){node.children.forEach(([child,t],i)=>visit(child,G.multiply(m,t),`${path}.${i}`));return;}
+      out.push({points:G.TILE.map(p=>G.transform(m,p)),label:node.label,id:path});
+    }
+    // Each generation reflects the whole construction. Normalise globally to
+    // keep the original handedness at both odd and even depths.
+    visit(nodes[label],depth%2?[-1,0,0,0,1,0]:G.ID,label);
+    if(CACHE.size>4)CACHE.delete(CACHE.keys().next().value);
+    CACHE.set(cacheKey,out);return out;
+  }
+  function periodicCell(){
+    const s=Math.sqrt(3),m=G.multiply(G.translation(...G.TILE[6]),G.multiply(G.rotation(150),[-1,0,0,0,1,0]));
+    return {u:[3+2*s,-s],v:[(3-s)/2,(3+s)/2],tiles:[
+      {points:G.TILE,label:'Original',member:0},
+      {points:G.TILE.map(p=>G.transform(m,p)),label:'Reflected',member:1}
+    ]};
+  }
+  function settings(input={}){
+    const s={mode:'aperiodic',seed:'20261104',width:148,height:105,edge:6,margin:8,rotation:0,palette:'kyoto',penWidth:.25,...input};
+    s.seed=String(s.seed).trim();
+    if(!s.seed||s.seed.length>120)throw new Error('Enter a seed of 1–120 characters.');
+    if(!['aperiodic','periodic'].includes(s.mode))throw new Error('Choose periodic or aperiodic mode.');
+    if(!PALETTES[s.palette])throw new Error('Choose a supported pen palette.');
+    for(const [key,min,max] of [['width',50,297],['height',50,297],['edge',3,18],['margin',3,30],['rotation',-360,360],['penWidth',.05,1]]){
+      if(!Number.isFinite(s[key])||s[key]<min||s[key]>max)throw new Error(`${key} must be between ${min} and ${max}.`);
+    }
+    if(s.margin*2>=Math.min(s.width,s.height)-10)throw new Error('The margin leaves too little drawing area.');
+    return s;
+  }
+  function pageTiles(tiles,centre,angle,s){
+    const r=G.rotation(angle),box={minX:s.margin,minY:s.margin,maxX:s.width-s.margin,maxY:s.height-s.margin};
+    return tiles.flatMap(tile=>{
+      const points=tile.points.map(p=>{
+        const q=G.transform(r,G.sub(p,centre));return [q[0]*s.edge+s.width/2,q[1]*s.edge+s.height/2];
+      });
+      return G.overlaps(G.bounds(points),box)?[{...tile,points}]:[];
+    });
+  }
+  function coveredArea(tiles,r){
+    const rect=[[r.x,r.y],[r.x+r.width,r.y],[r.x+r.width,r.y+r.height],[r.x,r.y+r.height]];
+    return tiles.reduce((a,t)=>a+G.area(G.clipConvex(t.points,rect)),0);
+  }
+  const mod=(a,n)=>((a%n)+n)%n;
+  const edgeKey=(a,b)=>{const p=a.map(x=>x.toFixed(5)).join(','),q=b.map(x=>x.toFixed(5)).join(',');return p<q?`${p}/${q}`:`${q}/${p}`;};
+  function generate(input={}){
+    const s=settings(input),rng=random(`${s.seed}/geometry`),angle=Math.floor(rng()*12)*30+s.rotation;
+    const rect={x:s.margin,y:s.margin,width:s.width-2*s.margin,height:s.height-2*s.margin};
+    let tiles,construction;
+    if(s.mode==='aperiodic'){
+      const labels=Object.keys(RULES),label=labels[Math.floor(rng()*labels.length)];
+      let found=false;
+      for(const depth of [4,5]){
+        const patch=aperiodicPatch(depth,label);
+        for(let attempt=0;attempt<36;attempt++){
+          const anchor=patch[Math.floor(rng()*patch.length)];
+          const centre=anchor.points.reduce((a,p)=>G.add(a,[p[0]/14,p[1]/14]),[0,0]);
+          const candidate=pageTiles(patch,centre,angle,s);
+          if(Math.abs(coveredArea(candidate,rect)/(rect.width*rect.height)-1)<1e-7){
+            tiles=candidate;construction={method:'homochiral substitution patch',root:label,depth,centre,angle};found=true;break;
+          }
+        }
+        if(found)break;
+      }
+      if(!found)throw new Error('This crop could not be covered. Try a larger tile size or another seed.');
+    }else{
+      const cell=periodicCell(),fu=rng(),fv=rng(),centre=[fu*cell.u[0]+fv*cell.v[0],fu*cell.u[1]+fv*cell.v[1]];
+      const inverse=G.rotation(-angle),det=G.cross(cell.u,cell.v);
+      const corners=[[0,0],[s.width,0],[s.width,s.height],[0,s.height]].map(p=>G.add(G.transform(inverse,[(p[0]-s.width/2)/s.edge,(p[1]-s.height/2)/s.edge]),centre));
+      const ij=corners.map(p=>[G.cross(p,cell.v)/det,G.cross(cell.u,p)/det]);
+      const ib=G.bounds(ij),raw=[];
+      for(let i=Math.floor(ib.minX)-3;i<=Math.ceil(ib.maxX)+3;i++)for(let j=Math.floor(ib.minY)-3;j<=Math.ceil(ib.maxY)+3;j++){
+        const move=[i*cell.u[0]+j*cell.v[0],i*cell.u[1]+j*cell.v[1]];
+        for(const t of cell.tiles)raw.push({...t,i,j,id:`${i},${j},${t.member}`,points:t.points.map(p=>G.add(p,move))});
+      }
+      tiles=pageTiles(raw,centre,angle,s);
+      construction={method:'two-tile translation lattice',centre,angle,lattice:[cell.u,cell.v],colourRepeat:[3,3]};
+    }
+    const palette=PALETTES[s.palette];
+    tiles=tiles.map(t=>{
+      const colourKey=s.mode==='periodic'?`${mod(t.i,3)},${mod(t.j,3)},${t.member}`:t.id;
+      return {...t,colour:hash(`${s.seed}/colour/${colourKey}`)%palette.length};
+    });
+    // Assign each shared edge once, before clipping. Unit edges retain the
+    // collinear midpoint, so an edge is never exported on top of a double edge.
+    const edges=new Map();
+    for(const tile of tiles)tile.points.forEach((p,i)=>{
+      const q=tile.points[(i+1)%14],key=edgeKey(p,q);
+      if(!edges.has(key))edges.set(key,{a:p,b:q,colour:tile.colour});
+    });
+    const lines=[];
+    for(const e of edges.values()){
+      const line=G.clipLine(e.a,e.b,rect);
+      if(line)lines.push({a:line[0],b:line[1],colour:e.colour});
+    }
+    const coverage=coveredArea(tiles,rect)/(rect.width*rect.height);
+    const lengthMm=lines.reduce((a,l)=>a+G.distance(l.a,l.b),0);
+    return {version:VERSION,settings:s,construction,tiles,lines,coverage,stats:{tiles:tiles.length,segments:lines.length,lengthMm}};
+  }
+  const xml=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const num=x=>Number(x.toFixed(4)).toString();
+  function recipe(art){return JSON.stringify({application:'Tile(1,1) Studio',version:VERSION,settings:art.settings},null,2);}
+  function toSvg(art,{carrier=false}={}){
+    const s=art.settings;
+    if(carrier&&(s.width!==148||s.height!==105))throw new Error('The A4 carrier is for the 148 × 105 mm postcard.');
+    const [dx,dy]=carrier?[31,96]:[0,0],w=carrier?210:s.width,h=carrier?297:s.height;
+    const meta={application:'Tile(1,1) Studio',version:VERSION,settings:s,construction:art.construction,stats:art.stats,offsetMm:[dx,dy],note:'Finite crop; aperiodicity refers to the generating infinite tiling. Shared edges drawn once.'};
+    const out=[`<?xml version="1.0" encoding="UTF-8"?>`,
+      `<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="${w}mm" height="${h}mm" viewBox="0 0 ${w} ${h}">`,
+      `<title>${xml(`Tile(1,1) ${s.mode} · seed ${s.seed}`)}</title>`,
+      `<metadata>${xml(JSON.stringify(meta))}</metadata>`];
+    PALETTES[s.palette].forEach((pen,index)=>{
+      out.push(`<g id="pen-${index+1}" inkscape:groupmode="layer" inkscape:label="${xml(pen.name)}" fill="none" stroke="${pen.hex}" stroke-width="${s.penWidth}" stroke-linecap="round" stroke-linejoin="round">`);
+      // Independent two-point paths avoid a giant compound path overwhelming
+      // an SVG importer; every move is explicit and every pen pass is separate.
+      for(const l of art.lines)if(l.colour===index)out.push(`<path d="M ${num(l.a[0]+dx)} ${num(l.a[1]+dy)} L ${num(l.b[0]+dx)} ${num(l.b[1]+dy)}"/>`);
+      out.push('</g>');
+    });out.push('</svg>');return out.join('\n');
+  }
+  return {VERSION,PALETTES,hash,random,settings,aperiodicPatch,periodicCell,generate,edgeKey,recipe,toSvg};
+});
+</script><script>/* Browser UI; all drawing logic lives in the testable geometry engine. */
+(()=>{
+  'use strict';
+  const T=window.TileStudio,G=window.TileGeometry,$=id=>document.getElementById(id);
+  const papers={postcard:[148,105],a5:[210,148],a4:[210,297]};
+  let art=null,filled=false,dirty=false;
+  const message=(text,error=false)=>{$('message').textContent=text;$('message').classList.toggle('error',error);};
+  function read(){const [width,height]=papers[$('paper').value];return {mode:document.querySelector('input[name=mode]:checked').value,seed:$('seed').value,width,height,edge:Number($('edge').value),margin:Number($('margin').value),rotation:Number($('rotation').value),palette:$('palette').value,penWidth:Number($('penWidth').value)};}
+  function updateLabels(){
+    $('edgeValue').value=`${$('edge').value} mm`;
+    $('modeNote').textContent=read().mode==='aperiodic'?'Rotations and translations only. All tiles have the same handedness.':'A repeating cell with an original tile and its mirror image.';
+    $('swatches').replaceChildren(...T.PALETTES[$('palette').value].map(p=>{const e=document.createElement('span');e.className='swatch';e.style.background=p.hex;e.title=p.name;return e;}));
+  }
+  function paint(){
+    if(!art)return;
+    const s=art.settings;
+    if(!filled)$('paperView').innerHTML=T.toSvg(art).replace(/<\?xml[^>]*>/,'');
+    else {
+      const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
+      svg.setAttribute('viewBox',`0 0 ${s.width} ${s.height}`);svg.setAttribute('aria-label',`${s.mode} tiling, coloured tiles`);
+      const r=[[s.margin,s.margin],[s.width-s.margin,s.margin],[s.width-s.margin,s.height-s.margin],[s.margin,s.height-s.margin]];
+      for(const tile of art.tiles){
+        const p=G.clipConvex(tile.points,r);if(p.length<3)continue;
+        const el=document.createElementNS(ns,'polygon');el.setAttribute('points',p.map(q=>q.join(',')).join(' '));el.setAttribute('fill',T.PALETTES[s.palette][tile.colour].hex);el.setAttribute('fill-opacity','.76');el.setAttribute('stroke','#fffdf7');el.setAttribute('stroke-width','.16');svg.append(el);
+      }
+      $('paperView').replaceChildren(svg);
+    }
+    $('paperView').classList.toggle('portrait',s.height>s.width);
+    $('viewLines').setAttribute('aria-pressed',String(!filled));$('viewFills').setAttribute('aria-pressed',String(filled));
+    $('previewNote').textContent=filled?'Tile colours are for inspection. The SVG export contains pen lines, without fills.':'The preview shows the pen paths. Paper and captions are not exported.';
+    $('artTitle').textContent=s.mode==='aperiodic'?'Aperiodic study':'Periodic study';
+    $('caption').textContent=`TILE(1,1) / ${s.mode} / SEED ${s.seed}`;
+    $('pageLabel').textContent=`${s.width} × ${s.height} mm`;
+    $('stats').textContent=`${art.stats.tiles} tiles in crop · ${art.stats.segments} segments · ${(art.stats.lengthMm/1000).toFixed(2)} m of pen travel`;
+    $('carrier').disabled=s.width!==148||s.height!==105||dirty;
+  }
+  function generate(){
+    try{art=T.generate(read());dirty=false;$('export').disabled=false;paint();message('Ready to export. Your seed and settings are recorded in the SVG.');return true;}
+    catch(e){$('export').disabled=true;$('carrier').disabled=true;message(e.message,true);return false;}
+  }
+  function download(text,name,type){
+    const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
+  }
+  const fileStem=()=>`tile-1-1-${art.settings.mode}-seed-${art.settings.seed.replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,60)}`;
+  $('controls').addEventListener('submit',e=>{e.preventDefault();generate();});
+  $('controls').addEventListener('input',()=>{dirty=true;updateLabels();$('export').disabled=true;$('carrier').disabled=true;message('Settings changed. Select Generate tiling to update the drawing.');});
+  $('next').addEventListener('click',()=>{
+    const seed=$('seed').value.trim();
+    if(/^\d+$/.test(seed))$('seed').value=String(BigInt(seed)+1n);
+    else {const m=seed.match(/^(.*)~(\d+)$/);$('seed').value=m?`${m[1]}~${BigInt(m[2])+1n}`:`${seed}~1`;}
+    generate();
+  });
+  document.querySelectorAll('input[name=mode]').forEach(e=>e.addEventListener('change',()=>{updateLabels();generate();}));
+  $('viewLines').addEventListener('click',()=>{filled=false;paint();});$('viewFills').addEventListener('click',()=>{filled=true;paint();});
+  $('export').addEventListener('click',()=>{if(!art||dirty)return;download(T.toSvg(art),`${fileStem()}.svg`,'image/svg+xml');message('SVG downloaded. In SVG Plotter, keep original size and position and use 0° rotation.');});
+  $('carrier').addEventListener('click',()=>{if(!art||dirty)return;download(T.toSvg(art,{carrier:true}),`${fileStem()}-a4-carrier.svg`,'image/svg+xml');message('A4 carrier downloaded. Place the postcard top-left at (31, 96) mm on A4 portrait.');});
+  $('saveRecipe').addEventListener('click',()=>{try{const s=T.settings(read());download(T.recipe({settings:s}),`tile-1-1-settings-${s.seed.replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,60)}.json`,'application/json');message('Settings downloaded. Use Load settings to recreate the drawing.');}catch(e){message(e.message,true);}});
+  $('loadRecipe').addEventListener('click',()=>$('recipeFile').click());
+  $('recipeFile').addEventListener('change',async e=>{
+    const file=e.target.files[0];if(!file)return;
+    try{
+      if(file.size>100000)throw new Error('That settings file is too large.');
+      const recipe=JSON.parse(await file.text());
+      if(recipe.application!=='Tile(1,1) Studio'||recipe.version!==T.VERSION)throw new Error('Use a Tile(1,1) Studio 1.0.0 settings file.');
+      const s=T.settings(recipe.settings),paper=Object.keys(papers).find(k=>papers[k][0]===s.width&&papers[k][1]===s.height);
+      if(!paper)throw new Error('This paper size is not supported by the interface.');
+      const rotation=[...$('rotation').options].find(o=>Number(o.value)===s.rotation);
+      if(!rotation)throw new Error('This rotation is not supported by the interface.');
+      document.querySelector(`input[name=mode][value=${s.mode}]`).checked=true;
+      for(const k of ['seed','edge','margin','rotation','palette','penWidth'])$(k).value=s[k];
+      $('paper').value=paper;updateLabels();generate();
+    }catch(err){message(err.message,true);}finally{e.target.value='';}
+  });
+  $('about').addEventListener('click',()=>$('aboutDialog').showModal());$('closeAbout').addEventListener('click',()=>$('aboutDialog').close());
+  updateLabels();generate();
+})();
+</script>
+</body></html>

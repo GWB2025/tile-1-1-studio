@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore seeded periodic and aperiodic Tile(1,1) tilings. Export layered SVGs for pen plotting.">
+  <title>Tile(1,1) Studio</title>
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+  <header><a class="brand" href="#"><span class="brand-icon">✧</span> TILE(1,1) <strong>STUDIO</strong></a><span class="edition">MATHEMATICAL PATTERNS / 01</span><button id="about" class="quiet">About the tile</button></header>
+  <main>
+    <aside>
+      <p class="eyebrow">A LITTLE ORDER. A LITTLE SURPRISE.</p>
+      <h1>One tile.<br>Two worlds.</h1>
+      <p class="intro">Explore the boundary between repetition and aperiodic order.</p>
+      <form id="controls">
+        <fieldset><legend>01 / TILING SYSTEM</legend><div class="mode-switch">
+          <label><input type="radio" name="mode" value="aperiodic" checked><span>Aperiodic</span></label>
+          <label><input type="radio" name="mode" value="periodic"><span>Periodic</span></label>
+        </div><p id="modeNote" class="note"></p></fieldset>
+        <fieldset><legend>02 / COMPOSITION</legend>
+          <label for="seed">Seed <span class="hint">numbers or words</span></label>
+          <div class="seed-row"><input id="seed" value="20261104" maxlength="120" required autocomplete="off"><button type="button" id="next" title="Next seed">Next ↗</button></div>
+          <div class="row"><label for="paper">Paper</label><select id="paper"><option value="postcard">Postcard · 148 × 105 mm</option><option value="a5">A5 · 210 × 148 mm</option><option value="a4">A4 · 210 × 297 mm</option></select></div>
+          <label for="edge">Tile edge <output id="edgeValue">6 mm</output></label><input type="range" id="edge" min="3" max="18" step="0.5" value="6">
+          <div class="two-col"><div><label for="margin">Margin · mm</label><input id="margin" type="number" min="3" max="30" step="1" value="8" required></div><div><label for="rotation">Extra rotation</label><select id="rotation"><option value="0">0°</option><option value="15">15°</option><option value="30">30°</option><option value="45">45°</option><option value="60">60°</option><option value="90">90°</option></select></div></div>
+        </fieldset>
+        <fieldset><legend>03 / INK & PAPER</legend>
+          <label for="palette">Pen palette</label><select id="palette"><option value="kyoto">Kyoto · Orange & browns</option><option value="garden">Garden · Green, blue & purple</option><option value="black">Monochrome · Black</option></select>
+          <div id="swatches" class="swatches"></div>
+          <label for="penWidth">Preview stroke · mm</label><select id="penWidth"><option value="0.25">0.25 · fine</option><option value="0.35">0.35 · medium</option><option value="0.45">0.45 · Micron 05 nominal</option></select>
+        </fieldset>
+        <button class="primary generate" type="submit">Generate tiling <span>↗</span></button>
+        <div class="recipe-actions"><button type="button" id="saveRecipe" class="quiet">Save settings</button><button type="button" id="loadRecipe" class="quiet">Load settings</button></div>
+        <input type="file" id="recipeFile" accept=".json,application/json" hidden>
+      </form>
+      <p class="footnote">Same seed + settings = same drawing.<br>Works offline. No account needed.</p>
+    </aside>
+    <section class="workspace" aria-label="Artwork preview">
+      <div class="workspace-bar"><div><span class="status-dot"></span><span id="artTitle">Aperiodic study</span></div><div class="view-switch"><button id="viewLines" aria-pressed="true">Pen lines</button><button id="viewFills" aria-pressed="false">Tile colours</button></div></div>
+      <div class="art-stage"><div id="paperView" class="paper"></div></div>
+      <div class="caption"><span id="caption">Preparing your tiling…</span><span id="pageLabel">148 × 105 mm</span></div>
+      <p id="previewNote" class="preview-note">The preview shows the pen paths. Paper and captions are not exported.</p>
+      <div class="export-bar"><div><strong id="stats">—</strong><p id="exportNote">Shared edges drawn once · separate pen layers</p></div><div class="export-actions"><button id="carrier" class="secondary">Postcard on A4</button><button id="export" class="primary">Export SVG ↓</button></div></div>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <dialog id="aboutDialog"><button class="close quiet" id="closeAbout" aria-label="Close about dialog">×</button><p class="eyebrow">THE MATHEMATICS</p><h2>A shape with two possibilities.</h2>
+    <p>Tile(1,1) has fourteen equal straight edges, including two collinear edges. Its shape was studied by David Smith, Joseph Samuel Myers, Craig S. Kaplan and Chaim Goodman-Strauss.</p>
+    <p><strong>Aperiodic mode</strong> selects a finite patch from their substitution construction. Every tile has the same handedness. Such infinite tilings cannot have a translational period.</p>
+    <p><strong>Periodic mode</strong> repeats a two-tile cell containing an original and a reflected tile. Its colour pattern repeats over a 3 × 3 array of cells.</p>
+    <p>The seed selects a crop, orientation and colours. Aperiodic seeds sample different parts of valid substitution patches. Periodic seeds vary a common repeating lattice; they do not each invent a new mathematical tiling family. The finite paper crop itself is not an infinite tiling.</p>
+    <p><strong>For SVG Plotter:</strong> choose the matching page, keep original size and position, set rotation to 0° and plot outline paths. Filled preview colours are for inspection only; exported SVGs contain pen lines. No physical plot has been verified.</p>
+    <p class="links"><a href="https://cs.uwaterloo.ca/~csk/spectre/" target="_blank" rel="noreferrer">Read the original research ↗</a><br><a href="https://youtu.be/ko6YCbfKtQg?t=699" target="_blank" rel="noreferrer">Dan Catt on repeatable randomness ↗</a><br><a href="https://youtu.be/1RD83NjwNIk?t=98" target="_blank" rel="noreferrer">Okamirufu on rules and parameters ↗</a></p>
+    <p class="footnote">Version 1.0.0 · Gordon Brindle, with OpenAI ChatGPT/Codex assistance. This project is not endorsed by the referenced researchers or artists.</p>
+  </dialog>
+  <script src="src/geometry.js"></script><script src="src/tiling.js"></script><script src="src/app.js"></script>
+</body></html>
