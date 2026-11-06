@@ -30,6 +30,12 @@
           <div id="swatches" class="swatches"></div>
           <label for="penWidth">Preview stroke · mm</label><select id="penWidth"><option value="0.25">0.25 · fine</option><option value="0.35">0.35 · medium</option><option value="0.45">0.45 · Micron 05 nominal</option></select>
         </fieldset>
+        <fieldset><legend>04 / TILE SHADING</legend>
+          <label for="shading">Shading style</label><select id="shading"><option value="none">Outlines only</option><option value="hatch" selected>Parallel hatching</option><option value="crosshatch">Cross-hatching</option></select>
+          <label for="hatchSpacing">Line spacing <output id="hatchSpacingValue">1.2 mm</output></label><input type="range" id="hatchSpacing" min="0.6" max="4" step="0.2" value="1.2">
+          <div class="two-col"><div><label for="hatchAngle">Base angle · °</label><input id="hatchAngle" type="number" min="0" max="180" step="1" value="45" required></div><div><label for="hatchVariation">Tile tones</label><select id="hatchVariation"><option value="varied">Varied</option><option value="uniform">Uniform</option></select></div></div>
+          <p id="shadingNote" class="note">Wider spacing gives lighter shading and faster plots. Varied tones change spacing and angle between tiles.</p>
+        </fieldset>
         <button class="primary generate" type="submit">Generate tiling <span>↗</span></button>
         <div class="recipe-actions"><button type="button" id="saveRecipe" class="quiet">Save settings</button><button type="button" id="loadRecipe" class="quiet">Load settings</button></div>
         <input type="file" id="recipeFile" accept=".json,application/json" hidden>
@@ -48,11 +54,12 @@
   <dialog id="aboutDialog"><button class="close quiet" id="closeAbout" aria-label="Close about dialog">×</button><p class="eyebrow">THE MATHEMATICS</p><h2>A shape with two possibilities.</h2>
     <p>Tile(1,1) has fourteen equal straight edges, including two collinear edges. Its shape was studied by David Smith, Joseph Samuel Myers, Craig S. Kaplan and Chaim Goodman-Strauss.</p>
     <p><strong>Aperiodic mode</strong> selects a finite patch from their substitution construction. Every tile has the same handedness. Such infinite tilings cannot have a translational period.</p>
-    <p><strong>Periodic mode</strong> repeats a two-tile cell containing an original and a reflected tile. Its colour pattern repeats over a 3 × 3 array of cells.</p>
+    <p><strong>Periodic mode</strong> repeats a two-tile cell containing an original and a reflected tile. Its colour and shading pattern repeats over a 3 × 3 array of cells.</p>
     <p>The seed selects a crop, orientation and colours. Aperiodic seeds sample different parts of valid substitution patches. Periodic seeds vary a common repeating lattice; they do not each invent a new mathematical tiling family. The finite paper crop itself is not an infinite tiling.</p>
     <p><strong>For SVG Plotter:</strong> choose the matching page, keep original size and position, set rotation to 0° and plot outline paths. Filled preview colours are for inspection only; exported SVGs contain pen lines. No physical plot has been verified.</p>
+    <p><strong>Tile shading</strong> uses real pen lines, so hatching is included in your SVG export. Parallel hatching is lighter; cross-hatching adds a second perpendicular set of lines. Varied tones use the seed to change line spacing and direction from tile to tile, even with one black pen. Lines stay 0.35 mm inside the tile boundaries. The spacing control sets the closest lines; lighter tiles use 1.4× or 2× that spacing. Shading adds pen travel and lifts.</p>
     <p class="links"><a href="https://cs.uwaterloo.ca/~csk/spectre/" target="_blank" rel="noreferrer">Read the original research ↗</a><br><a href="https://youtu.be/ko6YCbfKtQg?t=699" target="_blank" rel="noreferrer">Dan Catt on repeatable randomness ↗</a><br><a href="https://youtu.be/1RD83NjwNIk?t=98" target="_blank" rel="noreferrer">Okamirufu on rules and parameters ↗</a></p>
-    <p class="footnote">Version 1.0.0 · Gordon Brindle, with OpenAI ChatGPT/Codex assistance. This project is not endorsed by the referenced researchers or artists.</p>
+    <p class="footnote">Version 1.1.0 · Gordon Brindle, with OpenAI ChatGPT/Codex assistance. This project is not endorsed by the referenced researchers or artists.</p>
   </dialog>
   <script src="src/geometry.js"></script><script src="src/tiling.js"></script><script src="src/app.js"></script>
 </body></html>

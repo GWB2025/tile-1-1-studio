@@ -8,11 +8,35 @@ Double-click **`Tile_1_1_Studio.html`**. It opens in your browser and works enti
 
 1. Select **Aperiodic** or **Periodic**.
 2. Enter a seed, or click **Next ↗**. Numbers and words both work.
-3. Set the paper, tile edge length, margin, rotation and pens, then click **Generate tiling**.
+3. Set the paper, tile edge length, margin, rotation, pens and **Tile shading**, then click **Generate tiling**.
 4. Use **Pen lines** to see the exported drawing. **Tile colours** is an inspection view only.
 5. Select **Export SVG**, or **Postcard on A4** for a postcard positioned on a carrier sheet.
 
 Use **Save settings** and **Load settings** to keep a reproducible recipe. The same app version, seed and settings recreate the same artwork. SVG metadata also records the version, settings, construction and path statistics. The browser saves downloads in its usual download location; move artwork you want to retain into an `exports/` directory beside this app.
+
+## Tile shading — new in 1.1.0
+
+The app starts with **Parallel hatching**, **1.2 mm** spacing and **Varied** tones. Refresh an already-open tab after updating the app.
+
+| Style | Appearance | Plotting |
+| --- | --- | --- |
+| Outlines only | Open tiles | Fewest pen movements |
+| Parallel hatching | Fine lines inside every tile | A lighter starting point |
+| Cross-hatching | Two perpendicular sets of lines | Darker, with more pen travel and lifts |
+
+**Line spacing** controls the distance between lines: larger values give lighter shading. **Base angle** sets their direction on the paper. **Varied** tones use three spacings (1×, 1.4× and 2× the chosen value) and three angles (base, base + 30°, base + 60°), selected reproducibly by the seed. **Uniform** uses the chosen spacing and angle for every tile. Shading works with all palettes, including one black pen, and does not change the underlying tiling or outline colours. In periodic mode, the shading repeats over the same 3 × 3-cell motif as the colours.
+
+Hatching is exported as actual straight pen paths, in each tile's pen colour. There are no SVG fill patterns or masks for the plotter to interpret. Hatch centrelines stay at least 0.35 mm from tile edges, including concave corners; the visible gap depends on the physical pen width. Choose **Pen lines** to inspect exactly what will be exported. **Tile colours** remains an inspection view of solid colours.
+
+For seed `20261104`, a postcard with 6 mm tile edges and 8 mm margins has:
+
+| Aperiodic postcard | Paths | Pen-down travel |
+| --- | ---: | ---: |
+| Outlines only | 298 | 1.68 m |
+| Parallel hatching, default settings | 1,021 | 8.18 m |
+| Cross-hatching, default settings | 1,724 | 14.66 m |
+
+These are path lengths, not plot-time estimates. For a shorter first trial, increase spacing to 2 mm. Ready-made shaded postcards, A4-carrier hatch exports and their settings are in `examples/`, with `-hatch` or `-crosshatch` in their filenames. Version 1.0.0 recipes still load as outlines only, preserving their previous geometry.
 
 ## What the two modes mean
 
@@ -38,7 +62,7 @@ In SVG Plotter choose **Keep original size and position**, **0° rotation** and 
 
 Exports use explicit millimetre coordinates and ordinary straight two-point paths. Shared tile edges are drawn once. There are no transforms, clipping masks, fills, images, fonts or external dependencies in the plot SVG. Colour groups are Inkscape-compatible layers. Cropping is calculated before export; no artificial frame is drawn at the crop boundary. Each shared edge belongs to one pen pass, so a tile's whole perimeter is not necessarily one colour.
 
-The default postcard has roughly 300 short segments and about 1.7 m of pen-down travel; exact figures depend on the seed. Increasing tile size reduces detail and plotting time. A4 at the smallest 3 mm edge size is considerably denser. Segment count is **not** the plotter command count or a plot-time estimate.
+An outline-only postcard has roughly 300 short segments and about 1.7 m of pen-down travel; exact figures depend on the seed. Shading adds paths as shown above. Increasing tile size reduces outline detail; increasing hatch spacing reduces shading. A4 at the smallest 3 mm edge size is considerably denser. Segment count is **not** the plotter command count or a plot-time estimate.
 
 The Kyoto palette uses your Pigma Micron 05 Orange (35781), Light Brown (35783) and Dark Brown (37741). The colours are illustrative screen values, not measured ink matches. Physical stroke width comes from your pen and paper; the stroke control affects preview/SVG styling. Filled colours in the inspection view are not exported as filled regions.
 
@@ -59,7 +83,7 @@ node scripts/build.cjs
 
 The tests were written before the corresponding implementation. The bottom-up modules are `src/geometry.js` (coordinates, transformations, intersections and clipping), `src/tiling.js` (construction, deterministic random choices and SVG export), and `src/app.js` (interface). `index.html` is the editable multi-file application; the build script produces the single-file offline edition and examples.
 
-Validation covers equal edge lengths, analytical area, rigid transformations, polygon intersections, the periodic cell's area and overlapping neighbours, substitution counts, handedness, patch overlap, coverage, margins, deduplicated edges, reproducibility, colour repetition, SVG structure, recipes, carrier placement and invalid settings. See `docs/VALIDATION.md` for the checks performed. **No physical plot has been verified.**
+Validation covers equal edge lengths, analytical area, rigid transformations, polygon intersections, the periodic cell's area and overlapping neighbours, substitution counts, handedness, patch overlap, coverage, margins, deduplicated edges, reproducibility, colour and shading repetition, concave hatch clipping, boundary clearance, SVG structure, legacy recipes, carrier placement and invalid settings. See `docs/VALIDATION.md` for the checks performed. **No physical plot has been verified.**
 
 ## References and acknowledgements
 

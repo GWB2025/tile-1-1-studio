@@ -7,7 +7,7 @@
   else root.TileStudio=factory(root.TileGeometry);
 })(typeof globalThis!=='undefined'?globalThis:this,function(G){
   'use strict';
-  const VERSION='1.0.0';
+  const VERSION='1.1.0';
   const PALETTES={
     kyoto:[{name:'Pigma Micron Orange 05 · 35781',hex:'#df7b28'},{name:'Pigma Micron Light Brown 05 · 35783',hex:'#a97850'},{name:'Pigma Micron Dark Brown 05 · 37741',hex:'#493126'}],
     garden:[{name:'Pigma Micron Green 05',hex:'#48725a'},{name:'Pigma Micron Blue 05',hex:'#406993'},{name:'Pigma Micron Purple 05',hex:'#805875'}],
@@ -78,12 +78,15 @@
     ]};
   }
   function settings(input={}){
-    const s={mode:'aperiodic',seed:'20261104',width:148,height:105,edge:6,margin:8,rotation:0,palette:'kyoto',penWidth:.25,...input};
+    const s={mode:'aperiodic',seed:'20261104',width:148,height:105,edge:6,margin:8,rotation:0,palette:'kyoto',penWidth:.25,
+      shading:'none',hatchSpacing:1.2,hatchAngle:45,hatchVariation:'varied',...input};
     s.seed=String(s.seed).trim();
     if(!s.seed||s.seed.length>120)throw new Error('Enter a seed of 1–120 characters.');
     if(!['aperiodic','periodic'].includes(s.mode))throw new Error('Choose periodic or aperiodic mode.');
     if(!PALETTES[s.palette])throw new Error('Choose a supported pen palette.');
-    for(const [key,min,max] of [['width',50,297],['height',50,297],['edge',3,18],['margin',3,30],['rotation',-360,360],['penWidth',.05,1]]){
+    if(!['none','hatch','crosshatch'].includes(s.shading))throw new Error('Choose outlines, hatching or cross-hatching.');
+    if(!['uniform','varied'].includes(s.hatchVariation))throw new Error('Choose uniform or varied shading.');
+    for(const [key,min,max] of [['width',50,297],['height',50,297],['edge',3,18],['margin',3,30],['rotation',-360,360],['penWidth',.05,1],['hatchSpacing',.6,4],['hatchAngle',0,180]]){
       if(!Number.isFinite(s[key])||s[key]<min||s[key]>max)throw new Error(`${key} must be between ${min} and ${max}.`);
     }
     if(s.margin*2>=Math.min(s.width,s.height)-10)throw new Error('The margin leaves too little drawing area.');
@@ -140,7 +143,10 @@
     const palette=PALETTES[s.palette];
     tiles=tiles.map(t=>{
       const colourKey=s.mode==='periodic'?`${mod(t.i,3)},${mod(t.j,3)},${t.member}`:t.id;
-      return {...t,colour:hash(`${s.seed}/colour/${colourKey}`)%palette.length};
+      const shadeHash=hash(`${s.seed}/shade/${colourKey}`),varied=s.hatchVariation==='varied';
+      const shade={spacing:s.hatchSpacing*(varied?[1,1.4,2][shadeHash%3]:1),
+        angle:mod(s.hatchAngle+(varied?30*(Math.floor(shadeHash/3)%3):0),180)};
+      return {...t,colour:hash(`${s.seed}/colour/${colourKey}`)%palette.length,shade};
     });
     // Assign each shared edge once, before clipping. Unit edges retain the
     // collinear midpoint, so an edge is never exported on top of a double edge.
@@ -152,15 +158,29 @@
     const lines=[];
     for(const e of edges.values()){
       const line=G.clipLine(e.a,e.b,rect);
-      if(line)lines.push({a:line[0],b:line[1],colour:e.colour});
+      if(line)lines.push({a:line[0],b:line[1],colour:e.colour,kind:'outline'});
+    }
+    const outlineSegments=lines.length;
+    if(s.shading!=='none')for(const tile of tiles){
+      const angles=s.shading==='crosshatch'?[tile.shade.angle,tile.shade.angle+90]:[tile.shade.angle];
+      for(const hatchAngle of angles)for(const hatch of G.hatchPolygon(tile.points,{spacing:tile.shade.spacing,angle:hatchAngle})){
+        const line=G.clipLine(hatch.a,hatch.b,rect);
+        if(line&&G.distance(...line)>.05)lines.push({a:line[0],b:line[1],colour:tile.colour,kind:'shading',tileId:tile.id});
+      }
     }
     const coverage=coveredArea(tiles,rect)/(rect.width*rect.height);
     const lengthMm=lines.reduce((a,l)=>a+G.distance(l.a,l.b),0);
-    return {version:VERSION,settings:s,construction,tiles,lines,coverage,stats:{tiles:tiles.length,segments:lines.length,lengthMm}};
+    return {version:VERSION,settings:s,construction,tiles,lines,coverage,stats:{tiles:tiles.length,segments:lines.length,outlineSegments,shadingSegments:lines.length-outlineSegments,lengthMm}};
   }
   const xml=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const num=x=>Number(x.toFixed(4)).toString();
   function recipe(art){return JSON.stringify({application:'Tile(1,1) Studio',version:VERSION,settings:art.settings},null,2);}
+  function readRecipe(text){
+    const data=JSON.parse(text);
+    if(!data||data.application!=='Tile(1,1) Studio'||!['1.0.0',VERSION].includes(data.version)||!data.settings||typeof data.settings!=='object'||Array.isArray(data.settings))
+      throw new Error('Use a Tile(1,1) Studio 1.0.0 or 1.1.0 settings file.');
+    return settings(data.version==='1.0.0'?{...data.settings,shading:'none'}:data.settings);
+  }
   function toSvg(art,{carrier=false}={}){
     const s=art.settings;
     if(carrier&&(s.width!==148||s.height!==105))throw new Error('The A4 carrier is for the 148 × 105 mm postcard.');
@@ -178,5 +198,5 @@
       out.push('</g>');
     });out.push('</svg>');return out.join('\n');
   }
-  return {VERSION,PALETTES,hash,random,settings,aperiodicPatch,periodicCell,generate,edgeKey,recipe,toSvg};
+  return {VERSION,PALETTES,hash,random,settings,aperiodicPatch,periodicCell,generate,edgeKey,recipe,readRecipe,toSvg};
 });

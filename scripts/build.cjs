@@ -15,4 +15,12 @@ for(const mode of ['aperiodic','periodic'])for(const seed of ['20261104','202611
   if(seed==='20261104')fs.writeFileSync(path.join(root,'examples',stem+'-a4-carrier.svg'),T.toSvg(art,{carrier:true}));
   console.log(stem,art.stats);
 }
+for(const mode of ['aperiodic','periodic'])for(const shading of ['hatch','crosshatch']){
+  const art=T.generate({mode,shading,seed:'20261104'});
+  const stem=`tile-1-1-${mode}-seed-20261104-${shading}`;
+  fs.writeFileSync(path.join(root,'examples',stem+'.svg'),T.toSvg(art));
+  fs.writeFileSync(path.join(root,'examples',stem+'.json'),T.recipe(art));
+  if(shading==='hatch')fs.writeFileSync(path.join(root,'examples',stem+'-a4-carrier.svg'),T.toSvg(art,{carrier:true}));
+  console.log(stem,art.stats);
+}
 console.log('Built offline Tile_1_1_Studio.html and example SVGs.');

@@ -1,6 +1,6 @@
 {
   "name": "tile-1-1-studio",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Seeded Tile(1,1) tilings for pen plotting",
   "scripts": {"test": "node --test tests/*.test.cjs", "build": "node scripts/build.cjs"},

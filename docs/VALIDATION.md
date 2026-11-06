@@ -1,4 +1,30 @@
-# Validation — 1.0.0
+# Validation — 1.1.0
+
+Updated on Gordon's Mac on 6 November 2026.
+
+## Shading checks
+
+`node --test tests/*.test.cjs`: **22 tests passed**, including the original 11 geometry/export tests.
+
+- Physical hatch spacing, adjustable direction and inward clearance.
+- Concave polygons, scanlines through vertices, reflections and translation.
+- Hatch segments remain inside their owner tile and the paper crop, with at least 0.35 mm centreline clearance from tile boundaries at the tested endpoints and midpoints.
+- Identical seeds/settings reproduce identical geometry, colours and shading.
+- Shading preserves the original tile geometry and deduplicated outline paths.
+- Periodic shading repeats over the colour supercell, including line phase.
+- Both styles work with all palettes; monochrome retains different tones.
+- Denser spacing adds paths; cross-hatching adds a perpendicular line set.
+- SVG path counts match statistics and every carrier coordinate is offset by (31, 96) mm.
+- Version 1.0.0 recipes load as unshaded drawings; 1.1.0 recipes preserve shading controls.
+- Invalid spacing, angles, styles and recipes are rejected.
+
+The two aperiodic shaded SVG examples were rendered using librsvg and visually inspected. Parallel hatching has 1,021 paths / 8.177 m pen-down travel; cross-hatching has 1,724 paths / 14.664 m. Each still has 298 outline paths. The corresponding periodic examples have 1,073 / 1,756 paths.
+
+All 12 supplied SVGs passed independent XML parsing, path-count and plain-line syntax checks. A4 stress checks (3 mm tile edge and margin, 0.6 mm uniform cross-hatching, 15° extra rotation) retained full coverage in both modes: 38,296 / 38,913 paths, generated in approximately 0.63 / 0.09 seconds in Node on this Mac. This tests generation, not browser rendering or plotter throughput.
+
+The browser security policy blocked access to the local `file:` app for this update. Therefore **the new browser controls have not had an interactive browser check**. The previous version's browser check below does not verify the new interface. No physical plotting command was issued.
+
+## Original 1.0.0 checks
 
 Checked on Gordon's Mac on 4 November 2026.
 

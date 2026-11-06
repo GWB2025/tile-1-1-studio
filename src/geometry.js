@@ -84,5 +84,61 @@
     if(hi-lo<1e-10)return null;
     return [[a[0]+lo*dx,a[1]+lo*dy],[a[0]+hi*dx,a[1]+hi*dy]];
   }
-  return {TILE,ID,add,sub,cross,distance,transform,translation,rotation,multiply,signedArea,area,bounds,overlaps,triangulate,clipConvex,intersectionArea,clipLine};
+  function hatchPolygon(poly,{spacing=1.2,angle=45,inset=.35}={}){
+    if(!Number.isFinite(spacing)||spacing<=0||!Number.isFinite(angle)||!Number.isFinite(inset)||inset<0)
+      throw new Error('Hatching requires positive spacing, a finite angle and a non-negative inset.');
+    if(poly.length<3)return [];
+    // Work relative to the first vertex: translated tiles retain the same line
+    // phase, so decoration of a periodic cell is genuinely periodic too.
+    const origin=poly[0],toLocal=rotation(-angle),toPage=rotation(angle);
+    const p=poly.map(q=>transform(toLocal,sub(q,origin))),box=bounds(p),out=[];
+    const crossings=(polygon,y)=>{
+      const xs=[];
+      for(let i=0;i<polygon.length;i++){
+        const a=polygon[i],b=polygon[(i+1)%polygon.length];
+        const ay=Math.abs(a[1]-y)<1e-9?0:a[1]-y,by=Math.abs(b[1]-y)<1e-9?0:b[1]-y;
+        if((ay>0)!==(by>0))xs.push(a[0]-ay*(b[0]-a[0])/(by-ay));
+      }
+      return xs.sort((a,b)=>a-b);
+    };
+    // Each boundary edge is surrounded by a capsule (rectangle + end discs).
+    // Removing their scanline intervals gives a true perpendicular clearance,
+    // including beside notches and almost-parallel edges, without SVG masks.
+    const strips=p.flatMap((a,i)=>{
+      const b=p[(i+1)%p.length],length=distance(a,b);
+      if(length<1e-9)return [];
+      const n=[-(b[1]-a[1])*inset/length,(b[0]-a[0])*inset/length];
+      return [[add(a,n),add(b,n),sub(b,n),sub(a,n)]];
+    });
+    const first=Math.ceil(box.minY/spacing-.5),last=Math.floor(box.maxY/spacing-.5);
+    if(last-first>100000)throw new Error('Hatching spacing is too small for this polygon.');
+    for(let k=first;k<=last;k++){
+      const y=(k+.5)*spacing,xs=crossings(p,y),blocked=[];
+      if(inset>0){
+        for(const strip of strips){
+          const cuts=crossings(strip,y);
+          if(cuts.length>=2)blocked.push([cuts[0],cuts.at(-1)]);
+        }
+        for(const point of p){
+          const r2=inset*inset-(point[1]-y)**2;
+          if(r2>0){const dx=Math.sqrt(r2);blocked.push([point[0]-dx,point[0]+dx]);}
+        }
+      }
+      blocked.sort((a,b)=>a[0]-b[0]);
+      for(let i=0;i+1<xs.length;i+=2){
+        let start=xs[i];const end=xs[i+1];
+        const emit=(a,b)=>{if(b-a>.05+1e-9)out.push({a:add(transform(toPage,[a,y]),origin),b:add(transform(toPage,[b,y]),origin)});};
+        for(const [lo,hi] of blocked){
+          if(hi<=start)continue;
+          if(lo>=end)break;
+          if(lo>start)emit(start,lo);
+          start=Math.max(start,hi);
+          if(start>=end)break;
+        }
+        emit(start,end);
+      }
+    }
+    return out;
+  }
+  return {TILE,ID,add,sub,cross,distance,transform,translation,rotation,multiply,signedArea,area,bounds,overlaps,triangulate,clipConvex,intersectionArea,clipLine,hatchPolygon};
 });

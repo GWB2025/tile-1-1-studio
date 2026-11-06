@@ -5,9 +5,13 @@
   const papers={postcard:[148,105],a5:[210,148],a4:[210,297]};
   let art=null,filled=false,dirty=false;
   const message=(text,error=false)=>{$('message').textContent=text;$('message').classList.toggle('error',error);};
-  function read(){const [width,height]=papers[$('paper').value];return {mode:document.querySelector('input[name=mode]:checked').value,seed:$('seed').value,width,height,edge:Number($('edge').value),margin:Number($('margin').value),rotation:Number($('rotation').value),palette:$('palette').value,penWidth:Number($('penWidth').value)};}
+  function read(){const [width,height]=papers[$('paper').value];return {mode:document.querySelector('input[name=mode]:checked').value,seed:$('seed').value,width,height,edge:Number($('edge').value),margin:Number($('margin').value),rotation:Number($('rotation').value),palette:$('palette').value,penWidth:Number($('penWidth').value),shading:$('shading').value,hatchSpacing:Number($('hatchSpacing').value),hatchAngle:Number($('hatchAngle').value),hatchVariation:$('hatchVariation').value};}
   function updateLabels(){
     $('edgeValue').value=`${$('edge').value} mm`;
+    $('hatchSpacingValue').value=`${Number($('hatchSpacing').value).toFixed(1)} mm`;
+    const shadingOff=$('shading').value==='none';
+    for(const id of ['hatchSpacing','hatchAngle','hatchVariation'])$(id).disabled=shadingOff;
+    $('shadingNote').textContent=shadingOff?'Outlines only. Choose a shading style to add pen lines inside the tiles.':'Wider spacing gives lighter shading and faster plots. Varied tones change spacing and angle between tiles.';
     $('modeNote').textContent=read().mode==='aperiodic'?'Rotations and translations only. All tiles have the same handedness.':'A repeating cell with an original tile and its mirror image.';
     $('swatches').replaceChildren(...T.PALETTES[$('palette').value].map(p=>{const e=document.createElement('span');e.className='swatch';e.style.background=p.hex;e.title=p.name;return e;}));
   }
@@ -27,11 +31,12 @@
     }
     $('paperView').classList.toggle('portrait',s.height>s.width);
     $('viewLines').setAttribute('aria-pressed',String(!filled));$('viewFills').setAttribute('aria-pressed',String(filled));
-    $('previewNote').textContent=filled?'Tile colours are for inspection. The SVG export contains pen lines, without fills.':'The preview shows the pen paths. Paper and captions are not exported.';
+    $('previewNote').textContent=filled?'Solid colours are for inspection. Switch to Pen lines to see the exported shading.':'The preview shows every exported pen path, including shading. Paper and captions are not exported.';
     $('artTitle').textContent=s.mode==='aperiodic'?'Aperiodic study':'Periodic study';
     $('caption').textContent=`TILE(1,1) / ${s.mode} / SEED ${s.seed}`;
     $('pageLabel').textContent=`${s.width} × ${s.height} mm`;
-    $('stats').textContent=`${art.stats.tiles} tiles in crop · ${art.stats.segments} segments · ${(art.stats.lengthMm/1000).toFixed(2)} m of pen travel`;
+    $('stats').textContent=`${art.stats.tiles} tiles in crop · ${art.stats.segments.toLocaleString()} segments · ${(art.stats.lengthMm/1000).toFixed(2)} m of pen travel`;
+    $('exportNote').textContent=`${art.stats.outlineSegments} outlines + ${art.stats.shadingSegments.toLocaleString()} shading lines · separate pen layers`;
     $('carrier').disabled=s.width!==148||s.height!==105||dirty;
   }
   function generate(){
@@ -41,7 +46,7 @@
   function download(text,name,type){
     const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
   }
-  const fileStem=()=>`tile-1-1-${art.settings.mode}-seed-${art.settings.seed.replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,60)}`;
+  const fileStem=()=>`tile-1-1-${art.settings.mode}-seed-${art.settings.seed.replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,60)}${art.settings.shading==='none'?'':`-${art.settings.shading}`}`;
   $('controls').addEventListener('submit',e=>{e.preventDefault();generate();});
   $('controls').addEventListener('input',()=>{dirty=true;updateLabels();$('export').disabled=true;$('carrier').disabled=true;message('Settings changed. Select Generate tiling to update the drawing.');});
   $('next').addEventListener('click',()=>{
@@ -60,14 +65,12 @@
     const file=e.target.files[0];if(!file)return;
     try{
       if(file.size>100000)throw new Error('That settings file is too large.');
-      const recipe=JSON.parse(await file.text());
-      if(recipe.application!=='Tile(1,1) Studio'||recipe.version!==T.VERSION)throw new Error('Use a Tile(1,1) Studio 1.0.0 settings file.');
-      const s=T.settings(recipe.settings),paper=Object.keys(papers).find(k=>papers[k][0]===s.width&&papers[k][1]===s.height);
+      const s=T.readRecipe(await file.text()),paper=Object.keys(papers).find(k=>papers[k][0]===s.width&&papers[k][1]===s.height);
       if(!paper)throw new Error('This paper size is not supported by the interface.');
       const rotation=[...$('rotation').options].find(o=>Number(o.value)===s.rotation);
       if(!rotation)throw new Error('This rotation is not supported by the interface.');
       document.querySelector(`input[name=mode][value=${s.mode}]`).checked=true;
-      for(const k of ['seed','edge','margin','rotation','palette','penWidth'])$(k).value=s[k];
+      for(const k of ['seed','edge','margin','rotation','palette','penWidth','shading','hatchSpacing','hatchAngle','hatchVariation'])$(k).value=s[k];
       $('paper').value=paper;updateLabels();generate();
     }catch(err){message(err.message,true);}finally{e.target.value='';}
   });

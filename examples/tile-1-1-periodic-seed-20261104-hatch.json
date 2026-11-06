@@ -1,0 +1,19 @@
+{
+  "application": "Tile(1,1) Studio",
+  "version": "1.1.0",
+  "settings": {
+    "mode": "periodic",
+    "seed": "20261104",
+    "width": 148,
+    "height": 105,
+    "edge": 6,
+    "margin": 8,
+    "rotation": 0,
+    "palette": "kyoto",
+    "penWidth": 0.25,
+    "shading": "hatch",
+    "hatchSpacing": 1.2,
+    "hatchAngle": 45,
+    "hatchVariation": "varied"
+  }
+}
