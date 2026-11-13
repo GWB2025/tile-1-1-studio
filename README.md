@@ -90,7 +90,6 @@ Validation covers equal edge lengths, analytical area, rigid transformations, po
 - Smith, Myers, Kaplan and Goodman-Strauss: [A chiral aperiodic monotile](https://cs.uwaterloo.ca/~csk/spectre/), 2024, particularly Appendix A and Figure 5.3. Mathematical basis for the aperiodic construction.
 - The same authors: [An aperiodic monotile](https://arxiv.org/abs/2303.10798), 2024, Figure 6.2. Periodic tilings of Tile(1,1).
 - [Craig Kaplan's reference app](https://cs.uwaterloo.ca/~csk/spectre/app.html). Coordinate and substitution-table reference. This project provides its own interface, geometry utilities, crop selection, periodic construction and SVG exporter.
-- [Dan Catt — What is generative art?](https://youtu.be/ko6YCbfKtQg), particularly 11:39 onwards on deterministic randomness. Inspiration for keeping the seed and complete recipe.
 - [Okamirufu Vizualizer — What is Generative Art](https://youtu.be/1RD83NjwNIk), particularly 01:38 onwards on rules and parameters. Inspiration for separating the tiling rules from artistic controls.
 - [SVG Plotter](https://github.com/GWB2025/svg-plotter-ta4).
 
